@@ -78,7 +78,7 @@ public class HotelReservationServiceTest {
         Assert.assertEquals(200, cheapestBestRatedHotelResult.get(0).getTotalRate());
     }
     @Test
-    public void givenDateRange_whenSearched_shouldReturnBestRatedHotel() {
+    public void givenDateRange_whenSearched_shouldReturnBestRatedHotel() throws Exception {
         List<Result> BestRatedHotelResult = hotelReservationService.findBestRatedHotelforGivenDateRange(CustomerType.regular,
                 "11Sep2020", "12Sep2020");
         Assert.assertEquals(5, BestRatedHotelResult.get(0).getRating());
@@ -88,6 +88,14 @@ public class HotelReservationServiceTest {
     @Test
     public void givenWeekdayAndWeekend_whenCost5ForEach_shouldBeAddedToWeekdayAndWeekend() {
         Assert.assertEquals(100, this.hotelReservationService.costReward(ridgewood));
+    }
+    @Test
+    public void givenDateRangeForReward_whenSearched_shouldReturnCheapestBestRatedHotel() throws Exception {
+        List<Result> cheapestBestRatedHotelResult = hotelReservationService.findCheapestBestRatedHotelforGivenDateRange(CustomerType.reward,
+                "11Sep2020", "12Sep2020");
 
+        Assert.assertEquals(4, cheapestBestRatedHotelResult.get(1).getRating());
+        Assert.assertEquals("Bridgewood", cheapestBestRatedHotelResult.get(1).getHotelName());
+        Assert.assertEquals(160, cheapestBestRatedHotelResult.get(1).getTotalRate());
     }
 }

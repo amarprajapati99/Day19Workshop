@@ -3,6 +3,7 @@ package com.hotelreservation;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -107,20 +108,24 @@ public class HotelReservationService<weekDay, Weekend>{
     }
     /* to find  best rated hotel, hotel for given date range.*/
     public List<Result> findBestRatedHotelforGivenDateRange(CustomerType customerType, String initialDateRange,
-                                                             String endDateRange) {
-        LocalDate initialDate = LocalDate.parse(initialDateRange, DATE_RANGE_FORMAT);
-        LocalDate endDate = LocalDate.parse(endDateRange, DATE_RANGE_FORMAT);
-        List<Result> results = this.hotels.stream().map(hotel -> {
-            Result result = new Result();
-            result.setHotelName(hotel.name);
-            result.setRating(hotel.getRating());
-            result.setTotalRate(hotel.getTotalRate(customerType, initialDate, endDate));
-            return result;
-        }).sorted(Comparator.comparing(Result::getRating).reversed())
-                .collect(Collectors.toList());
-        return results;
-    }
+                                                             String endDateRange) throws Exception {
+        try {
+            LocalDate initialDate = LocalDate.parse(initialDateRange, DATE_RANGE_FORMAT);
+            LocalDate endDate = LocalDate.parse(endDateRange, DATE_RANGE_FORMAT);
+            List<Result> results = this.hotels.stream().map(hotel -> {
+                Result result = new Result();
+                result.setHotelName(hotel.name);
+                result.setRating(hotel.getRating());
+                result.setTotalRate(hotel.getTotalRate(customerType, initialDate, endDate));
+                return result;
+            }).sorted(Comparator.comparing(Result::getTotalRate)
+                    .thenComparing(Comparator.comparing(Result::getRating).reversed())).collect(Collectors.toList());
+            return results;
+        }catch(DateTimeParseException e) {
+            throw new Exception("Please provide valid dates");
+        }
     /* @Description - Add special rates for reward customer as a part of loyalty program.*/
+
     public int costReward(Hotel hotel) {
         LocalDate todayDate = LocalDate.now();
         if (todayDate.getDayOfWeek().equals(DayOfWeek.SATURDAY) || todayDate.getDayOfWeek().equals(DayOfWeek.SUNDAY))
@@ -129,3 +134,4 @@ public class HotelReservationService<weekDay, Weekend>{
             return Hotel.rate.get(CustomerType.reward).getWeekdayRates();
     }
 }
+

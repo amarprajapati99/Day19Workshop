@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 public class Hotel {
     public String name;
     public int rating;
-    public static Map<CustomerType, Rate> rate;
+    public  Map<CustomerType, Rate> rate;
 
     public Hotel(String name, int rating, Map<CustomerType, Rate> rate) {
         this.name = name;
