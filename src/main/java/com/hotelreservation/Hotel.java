@@ -41,4 +41,8 @@ public class Hotel {
     public void setRating(int rating) {
         this.rating = rating;
     }
+
+    public int getrating(int i) {
+        return this.rating;
+    }
 }
