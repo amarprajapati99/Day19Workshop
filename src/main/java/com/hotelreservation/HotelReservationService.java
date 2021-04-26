@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 /* @Description - Add hotel in hotel reservation system */
 
-public class HotelReservationService {
+public class HotelReservationService<weekDay, Weekend>{
     private static final DateTimeFormatter DATE_RANGE_FORMAT = DateTimeFormatter.ofPattern("ddMMMyyyy");
     private List<Hotel> hotels;
 
