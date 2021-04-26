@@ -64,12 +64,12 @@ public class HotelReservationService<weekDay, Weekend>{
         return dayName;
     }
 
-    public int cost(Hotel lakewood) {
+    public int cost(Hotel hotel) {
         LocalDate todayDate = LocalDate.now();
         if (todayDate.getDayOfWeek().equals(DayOfWeek.SATURDAY) || todayDate.getDayOfWeek().equals(DayOfWeek.SUNDAY))
-            return lakewood.rate.get(CustomerType.regular).getWeekendRates();
+            return hotel.rate.get(CustomerType.regular).getWeekendRates();
         else
-            return lakewood.rate.get(CustomerType.regular).getWeekdayRates();
+            return hotel.rate.get(CustomerType.regular).getWeekdayRates();
     }
 
     public int cost1(Hotel bridgewood) {
@@ -119,5 +119,13 @@ public class HotelReservationService<weekDay, Weekend>{
         }).sorted(Comparator.comparing(Result::getRating).reversed())
                 .collect(Collectors.toList());
         return results;
+    }
+    /* @Description - Add special rates for reward customer as a part of loyalty program.*/
+    public int costReward(Hotel hotel) {
+        LocalDate todayDate = LocalDate.now();
+        if (todayDate.getDayOfWeek().equals(DayOfWeek.SATURDAY) || todayDate.getDayOfWeek().equals(DayOfWeek.SUNDAY))
+            return Hotel.rate.get(CustomerType.reward).getWeekendRates();
+        else
+            return Hotel.rate.get(CustomerType.reward).getWeekdayRates();
     }
 }

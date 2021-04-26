@@ -81,9 +81,13 @@ public class HotelReservationServiceTest {
     public void givenDateRange_whenSearched_shouldReturnBestRatedHotel() {
         List<Result> BestRatedHotelResult = hotelReservationService.findBestRatedHotelforGivenDateRange(CustomerType.regular,
                 "11Sep2020", "12Sep2020");
-
         Assert.assertEquals(5, BestRatedHotelResult.get(0).getRating());
         Assert.assertEquals("Ridgewood", BestRatedHotelResult.get(0).getHotelName());
         Assert.assertEquals(370, BestRatedHotelResult.get(0).getTotalRate());
+    }
+    @Test
+    public void givenWeekdayAndWeekend_whenCost5ForEach_shouldBeAddedToWeekdayAndWeekend() {
+        Assert.assertEquals(100, this.hotelReservationService.costReward(ridgewood));
+
     }
 }
