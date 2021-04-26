@@ -1,5 +1,6 @@
 package com.hotelreservation;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -34,5 +35,55 @@ public class HotelReservationService {
 
         return results.stream().filter(result -> result.getTotalRate()==results.get(0).getTotalRate())
                 .collect(Collectors.toList());
+    }
+    /* @Description - Add week day .*/
+
+    public String addweekday(int day) {
+        String dayName = "";
+        switch (day) {
+            case 1: dayName = "Monday"; break;
+            case 2: dayName = "Tuesday"; break;
+            case 3: dayName = "Wednesday"; break;
+            case 4: dayName = "Thursday"; break;
+            case 5: dayName = "Friday"; break;
+            default:dayName = "Invalid day range";
+        }
+
+        return dayName;
+    }
+    /* @Description - Add weekend day rates for each hotel .*/
+
+    public String addweekend(int day) {
+        String dayName = "";
+        switch (day) {
+            case 1: dayName = "Saturday"; break;
+            case 2: dayName = "Sunday"; break;
+            default:dayName = "Invalid day range";
+        }
+        return dayName;
+    }
+
+    public int cost(Hotel lakewood) {
+        LocalDate todayDate= LocalDate.now() ;
+        if(todayDate.getDayOfWeek().equals(DayOfWeek.SATURDAY)||todayDate.getDayOfWeek().equals(DayOfWeek.SUNDAY))
+            return lakewood.rate.get(CustomerType.regular).getWeekendRates();
+        else
+            return lakewood.rate.get(CustomerType.regular).getWeekdayRates();
+    }
+
+    public int cost1(Hotel bridgewood) {
+        LocalDate todayDate= LocalDate.now() ;
+        if(todayDate.getDayOfWeek().equals(DayOfWeek.SATURDAY)||todayDate.getDayOfWeek().equals(DayOfWeek.SUNDAY))
+            return bridgewood.rate.get(CustomerType.reward).getWeekendRates();
+        else
+            return bridgewood.rate.get(CustomerType.regular).getWeekdayRates();
+    }
+
+    public int cost2(Hotel ridgewood) {
+        LocalDate todayDate= LocalDate.now() ;
+        if(todayDate.getDayOfWeek().equals(DayOfWeek.SATURDAY)||todayDate.getDayOfWeek().equals(DayOfWeek.SUNDAY))
+            return ridgewood.rate.get(CustomerType.regular).getWeekendRates();
+        else
+            return ridgewood.rate.get(CustomerType.regular).getWeekdayRates();
     }
 }
