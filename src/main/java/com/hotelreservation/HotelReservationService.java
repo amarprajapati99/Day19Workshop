@@ -19,21 +19,22 @@ public class HotelReservationService<weekDay, Weekend>{
     public boolean addHotel(Hotel hotel) {
         return this.hotels.add(hotel);
     }
-    /* @Description - To find the cheapest hotel to given range.*/
+    /* @Description - To find the cheapest hotel to given range
+     * to find cheapest hotel based on rated hotel.*/
 
-    public List<Result> findCheapestHotelsBasedOnDay(CustomerType customerType, String initialDateRange, String endDateRange) {
+    public List<Result> findCheapestHotelsBasedOnDay(CustomerType customerType, String initialDateRange,
+                                                     String endDateRange) {
         LocalDate initialDate = LocalDate.parse(initialDateRange, DATE_RANGE_FORMAT);
         LocalDate endDate = LocalDate.parse(endDateRange, DATE_RANGE_FORMAT);
 
-        List<Result> results = this.hotels.stream()
-                .map(hotel -> {
-                    Result result = new Result();
-                    result.setHotelName(hotel.name);
-                    result.setTotalRate(hotel.getTotalRate(customerType, initialDate, endDate));
-                    return result;
-                }).sorted(Comparator.comparing(Result::getTotalRate)).collect(Collectors.toList());
+        List<Result> results = this.hotels.stream().map(hotel -> {
+            Result result = new Result();
+            result.setHotelName(hotel.name);
+            result.setTotalRate(hotel.getTotalRate(customerType, initialDate, endDate));
+            return result;
+        }).sorted(Comparator.comparing(Result::getTotalRate)).collect(Collectors.toList());
 
-        return results.stream().filter(result -> result.getTotalRate()==results.get(0).getTotalRate())
+        return results.stream().filter(result -> result.getTotalRate() == results.get(0).getTotalRate())
                 .collect(Collectors.toList());
     }
     /* @Description - Add week day .*/
@@ -64,26 +65,44 @@ public class HotelReservationService<weekDay, Weekend>{
     }
 
     public int cost(Hotel lakewood) {
-        LocalDate todayDate= LocalDate.now() ;
-        if(todayDate.getDayOfWeek().equals(DayOfWeek.SATURDAY)||todayDate.getDayOfWeek().equals(DayOfWeek.SUNDAY))
+        LocalDate todayDate = LocalDate.now();
+        if (todayDate.getDayOfWeek().equals(DayOfWeek.SATURDAY) || todayDate.getDayOfWeek().equals(DayOfWeek.SUNDAY))
             return lakewood.rate.get(CustomerType.regular).getWeekendRates();
         else
             return lakewood.rate.get(CustomerType.regular).getWeekdayRates();
     }
 
     public int cost1(Hotel bridgewood) {
-        LocalDate todayDate= LocalDate.now() ;
-        if(todayDate.getDayOfWeek().equals(DayOfWeek.SATURDAY)||todayDate.getDayOfWeek().equals(DayOfWeek.SUNDAY))
-            return bridgewood.rate.get(CustomerType.reward).getWeekendRates();
+        LocalDate todayDate = LocalDate.now();
+        if (todayDate.getDayOfWeek().equals(DayOfWeek.SATURDAY) || todayDate.getDayOfWeek().equals(DayOfWeek.SUNDAY))
+            return bridgewood.rate.get(CustomerType.regular).getWeekendRates();
         else
             return bridgewood.rate.get(CustomerType.regular).getWeekdayRates();
     }
 
     public int cost2(Hotel ridgewood) {
-        LocalDate todayDate= LocalDate.now() ;
-        if(todayDate.getDayOfWeek().equals(DayOfWeek.SATURDAY)||todayDate.getDayOfWeek().equals(DayOfWeek.SUNDAY))
+        LocalDate todayDate = LocalDate.now();
+        if (todayDate.getDayOfWeek().equals(DayOfWeek.SATURDAY) || todayDate.getDayOfWeek().equals(DayOfWeek.SUNDAY))
             return ridgewood.rate.get(CustomerType.regular).getWeekendRates();
         else
             return ridgewood.rate.get(CustomerType.regular).getWeekdayRates();
+    }
+    /* to find cheapest best rated hotel, hotel for given date range.*/
+
+    public List<Result> findCheapestBestRatedHotelforGivenDateRange(CustomerType customerType, String initialDateRange,
+                                                                    String endDateRange) {
+        LocalDate initialDate = LocalDate.parse(initialDateRange, DATE_RANGE_FORMAT);
+        LocalDate endDate = LocalDate.parse(endDateRange, DATE_RANGE_FORMAT);
+
+        List<Result> results = this.hotels.stream().map(hotel -> {
+            Result result = new Result();
+            result.setHotelName(hotel.name);
+            result.setRating(hotel.getRating());
+            result.setTotalRate(hotel.getTotalRate(customerType, initialDate, endDate));
+            return result;
+        }).sorted(Comparator.comparing(Result::getTotalRate)
+                .thenComparing(Comparator.comparing(Result::getRating).reversed())).collect(Collectors.toList());
+        return results;
+
     }
 }

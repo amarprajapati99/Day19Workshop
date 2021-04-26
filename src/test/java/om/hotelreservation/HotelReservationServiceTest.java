@@ -69,4 +69,13 @@ public class HotelReservationServiceTest {
     public void givenHotel_whenInvokedAddRating_shouldBeAbleToAdd() {
         Assert.assertEquals(3,lakewood.getrating(3));
     }
+    @Test
+    public void givenDateRange_whenSearched_shouldReturnCheapestBestRatedHotel() {
+        List<Result> cheapestBestRatedHotelResult = hotelReservationService.findCheapestBestRatedHotelforGivenDateRange(CustomerType.regular,
+                "11Sep2020", "12Sep2020");
+
+        Assert.assertEquals(4, cheapestBestRatedHotelResult.get(0).getRating());
+        Assert.assertEquals(200, cheapestBestRatedHotelResult.get(0).getTotalRate());
+    }
+
 }
